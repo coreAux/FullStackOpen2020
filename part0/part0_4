@@ -1,0 +1,40 @@
+title Part 0.4
+
+note over browser:
+Browser sends data contained in the form to the address
+end note
+
+browser->server:\n HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+
+note over server:
+Server responds with a URI redirect telling the browser to make
+a new GET request to the slug "/notes", i.e. redirects the browser
+end note
+
+server-->browser:\n Status code 302: found
+browser->server:\n HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+server-->browser:\n HTML
+browser->server:\n HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+server-->browser:\n main.css
+browser->server:\n HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+server-->browser:\n main.js
+
+note over browser:
+Browser starts executing main.js which contains a GET
+request of a JSON-file (data.js) from the server
+end note
+
+browser->server:\n HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+
+note over server:
+Server responds with the JSON-file which contains an array
+of objects with information on the content and date of each note
+end note
+
+server-->browser:\n data.json
+
+note over browser:
+When readyState is "done", the code in main.js parses the JSON in
+data.json and renders the content of each note to display
+end note
+
