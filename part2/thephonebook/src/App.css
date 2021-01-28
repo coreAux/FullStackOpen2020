@@ -1,0 +1,31 @@
+div:first-child {
+  width: 75vw;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+div {
+  margin-bottom: 2em;
+}
+
+input {
+  height: 2em;
+  width: 5em%;
+  border-radius: 9999px;
+  padding-left: 1em;
+  padding-right: 1em;
+  border: 1px LightBlue solid;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding-right: 2em;
+  padding-left: 2em;
+  background-color: LightBlue;
+}
+
+form > div {
+  margin-bottom: 1em;
+}
