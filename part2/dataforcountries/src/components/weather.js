@@ -3,12 +3,7 @@ import axios from "axios";
 
 const Weather = ({ capital, country }) => {
   // NOTE: WEATHER HOOK
-  const [currentWeather, setCurrentWeather] = useState({
-    location: [],
-    current: {
-      weather_icons: [],
-    },
-  });
+  const [currentWeather, setCurrentWeather] = useState(0);
 
   // Get our weather data from weatherstack  API
   const getWeatherHook = () => {
@@ -26,31 +21,40 @@ const Weather = ({ capital, country }) => {
         console.log(resp.data);
       });
   };
+
   // Run the weather hook
   useEffect(getWeatherHook, [capital, country]);
 
-  return (
-    <div>
-      <h2>Weather in {currentWeather.location.name}</h2>
-      <p>
-        <strong>Temperature:</strong> {currentWeather.current.temperature}{" "}
-        degrees celsius
-      </p>
-      {currentWeather.current.weather_icons.map((icon) => (
-        <img
-          src={`${icon}`}
-          alt="Icon of weather"
-          className="weather-icon"
-          key={`${icon}`}
-        />
-      ))}
-      <p>
-        <strong>Wind: </strong>
-        {currentWeather.current.wind_speed} mph direction{" "}
-        {currentWeather.current.wind_dir}
-      </p>
-    </div>
-  );
+  if (currentWeather === 0) {
+    return (
+      <div>
+        <p>Loading weather...</p>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <h2>Weather in {currentWeather.location.name}</h2>
+        <p>
+          <strong>Temperature:</strong> {currentWeather.current.temperature}{" "}
+          degrees celsius
+        </p>
+        {currentWeather.current.weather_icons.map((icon) => (
+          <img
+            src={`${icon}`}
+            alt="Icon of weather"
+            className="weather-icon"
+            key={`${icon}`}
+          />
+        ))}
+        <p>
+          <strong>Wind: </strong>
+          {currentWeather.current.wind_speed} mph direction{" "}
+          {currentWeather.current.wind_dir}
+        </p>
+      </div>
+    );
+  }
 };
 
 export default Weather;

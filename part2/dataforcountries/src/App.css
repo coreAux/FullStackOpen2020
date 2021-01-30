@@ -11,3 +11,18 @@ img.weather-icon {
 .debug {
   background-color: gold;
 }
+
+body {
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90vw;
+}
+
+input {
+  border: 1px black solid;
+  border-radius: 9999px;
+  padding: 0.5em;
+  padding-right: 1em;
+  padding-left: 1em;
+}

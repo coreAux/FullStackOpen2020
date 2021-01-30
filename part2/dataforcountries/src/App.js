@@ -50,7 +50,6 @@ const App = () => {
           placeholder="E.g. Finland, Sweden..."
         />
       </div>
-      <div className="debug">Hi I'm debug :)</div>
       <div>
         {filter.length > 10 && searchTerm.length !== 0 ? (
           <p>Too many matches, specify another filter!</p>
