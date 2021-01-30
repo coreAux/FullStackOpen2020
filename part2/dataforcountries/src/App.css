@@ -1,0 +1,13 @@
+img {
+  width: 10em;
+  height: 10em;
+}
+
+img.weather-icon {
+  width: 5em;
+  height: auto;
+}
+
+.debug {
+  background-color: gold;
+}

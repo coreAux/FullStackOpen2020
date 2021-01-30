@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
 import "./App.css";
+
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
@@ -16,6 +19,17 @@ const App = () => {
   const [searchName, setNewSearchName] = useState("");
   const [newPhonenumber, setNewPhonenumber] = useState("");
 
+  const hook = () => {
+    console.log("Effect");
+
+    axios.get("http://localhost:3001/persons").then((r) => {
+      console.log("Promise fulfilled");
+      setPersons(r.data);
+    });
+  };
+
+  useEffect(hook, []);
+
   const windowAlert = (message) => {
     window.alert(message);
   };
@@ -23,7 +37,7 @@ const App = () => {
   const addPerson = () => {
     const person = {
       name: newName,
-      phonenumber: newPhonenumber,
+      number: newPhonenumber,
     };
 
     setPersons(persons.concat(person));
