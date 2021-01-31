@@ -1,64 +1,82 @@
+// Mark : - Imports
+// Libraries
 import { useState, useEffect } from "react";
-import axios from "axios";
 
+// CSS
 import "./App.css";
 
+// Components
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
 
+// Services
+import personService from "./services/persons.js";
+
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas", phonenumber: "39-44-5323523" },
-    { name: "Ada Lovelace", phonenumber: "040-123456" },
-    { name: "Mickey", phonenumber: "0707-123987" },
-    { name: "Dan Abramov", phonenumber: "12-46-89456" },
-    { name: "Mary Poppendieck", phonenumber: "323" },
+    { name: "Arto Hellas", number: "39-44-5323523" },
+    { name: "Ada Lovelace", number: "040-123456" },
+    { name: "Mickey", number: "0707-123987" },
+    { name: "Dan Abramov", number: "12-46-89456" },
+    { name: "Mary Poppendieck", number: "323" },
   ]);
   const [newName, setNewName] = useState("");
   const [searchName, setNewSearchName] = useState("");
   const [newPhonenumber, setNewPhonenumber] = useState("");
 
-  const hook = () => {
-    console.log("Effect");
-
-    axios.get("http://localhost:3001/persons").then((r) => {
-      console.log("Promise fulfilled");
-      setPersons(r.data);
-    });
-  };
-
-  useEffect(hook, []);
-
-  const windowAlert = (message) => {
-    window.alert(message);
-  };
-
+  // CRUD functions
+  // Create, invoked by the handelSubmit function
   const addPerson = () => {
     const person = {
       name: newName,
       number: newPhonenumber,
     };
 
-    setPersons(persons.concat(person));
-    setNewName("");
-    setNewPhonenumber("");
+    personService.create(person).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName("");
+      setNewPhonenumber("");
+    });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Read
+  useEffect(() => {
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
+    });
+  }, []);
 
-    // Filter through array to see if newName already exists in there
-    // If it does, the filter-function will return an array that is not empty
-    if (persons.filter((e) => e.name === newName).length > 0) {
-      // If the returned array is not empty we warn the user that the name already exists
-      windowAlert(`${newName} is already added to the phonebok!`);
-    } else {
-      // If the returned array is empty we can safely add the person to the phonebook
-      addPerson();
+  // Update
+  const updatePerson = () => {
+    const person = persons.find((p) => p.name === newName);
+    const id = person.id;
+    const changedPerson = { ...person, number: newPhonenumber };
+
+    personService
+      .update(id, changedPerson)
+      .then((returnedPerson) => {
+        setPersons(persons.map((p) => (p.id !== id ? p : returnedPerson)));
+      })
+      .catch((err) => {
+        window.alert(err);
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+  };
+
+  // Delete person
+  const deletePerson = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService
+        .deletePerson(id)
+        .then((returnedData) => {
+          setPersons(persons.filter((p) => p.id !== id));
+        })
+        .catch((err) => window.alert(err));
     }
   };
 
+  // Handlers
   // Syncs the input with the components state
   const handleNameChange = (e) => {
     setNewName(e.target.value);
@@ -70,13 +88,31 @@ const App = () => {
     setNewSearchName(e.target.value);
   };
 
+  // Function for when form is submitted
+  const handleSubmit = (e, person) => {
+    e.preventDefault();
+
+    // Filter through array to see if newName already exists in there
+    // If it does, the filter-function will return an array that is not empty
+    if (persons.filter((e) => e.name === newName).length > 0) {
+      // If the returned array is not empty we warn the user that the name already exists
+      if (
+        window.confirm(
+          `${newName} is already added to the phonebook, replace the old number with a new one?`
+        )
+      ) {
+        updatePerson();
+      }
+    } else {
+      // If the returned array is empty we can safely add the person to the phonebook
+      addPerson();
+    }
+  };
+
   // Store our persons-array for future filtering use
-  const showPersons =
-    searchName.length < 0
-      ? persons
-      : persons.filter((obj) =>
-          obj.name.toLowerCase().includes(searchName.toLowerCase())
-        );
+  const showPersons = persons.filter((obj) =>
+    obj.name.toLowerCase().includes(searchName.toLowerCase())
+  );
 
   return (
     <div>
@@ -95,7 +131,7 @@ const App = () => {
         />
       </div>
       <h2>Numbers</h2>
-      <Person showPersons={showPersons} />
+      <Person showPersons={showPersons} deletePerson={deletePerson} />
     </div>
   );
 };

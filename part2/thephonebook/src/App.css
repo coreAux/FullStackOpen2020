@@ -18,6 +18,13 @@ input {
   border: 1px LightBlue solid;
 }
 
+p button {
+  color: firebrick;
+  font-weight: bold;
+  border: 0px firebrick solid;
+  background-color: gainsboro;
+}
+
 button {
   border: none;
   border-radius: 999px;
