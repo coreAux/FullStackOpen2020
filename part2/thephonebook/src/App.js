@@ -9,21 +9,25 @@ import "./App.css";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
+import Notification from "./components/Notification";
 
 // Services
 import personService from "./services/persons.js";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "39-44-5323523" },
-    { name: "Ada Lovelace", number: "040-123456" },
-    { name: "Mickey", number: "0707-123987" },
-    { name: "Dan Abramov", number: "12-46-89456" },
-    { name: "Mary Poppendieck", number: "323" },
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [searchName, setNewSearchName] = useState("");
   const [newPhonenumber, setNewPhonenumber] = useState("");
+  const [notification, setNotification] = useState(null);
+
+  // Function for activating a Notification
+  const activateNotification = (message, type, timeout) => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, timeout);
+  };
 
   // CRUD functions
   // Create, invoked by the handelSubmit function
@@ -37,6 +41,11 @@ const App = () => {
       setPersons(persons.concat(returnedPerson));
       setNewName("");
       setNewPhonenumber("");
+      activateNotification(
+        `Added ${person.name} to the Phonebook.`,
+        "success",
+        10000
+      );
     });
   };
 
@@ -59,7 +68,11 @@ const App = () => {
         setPersons(persons.map((p) => (p.id !== id ? p : returnedPerson)));
       })
       .catch((err) => {
-        window.alert(err);
+        activateNotification(
+          `Information of ${person.name} has already been removed from the server.`,
+          "error",
+          10000
+        );
         setPersons(persons.filter((p) => p.id !== id));
       });
   };
@@ -70,9 +83,16 @@ const App = () => {
       personService
         .deletePerson(id)
         .then((returnedData) => {
+          activateNotification(`Deleted ${name}`, "info", 10000);
           setPersons(persons.filter((p) => p.id !== id));
         })
-        .catch((err) => window.alert(err));
+        .catch((err) => {
+          activateNotification(
+            `${name} has already been deleted from the server!`,
+            "error",
+            10000
+          );
+        });
     }
   };
 
@@ -117,6 +137,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification {...notification} />
       <div>
         <Filter searchName={searchName} handleSearchName={handleSearchName} />
       </div>

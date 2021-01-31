@@ -19,10 +19,12 @@ input {
 }
 
 p button {
-  color: firebrick;
+  color: white;
+  text-transform: uppercase;
   font-weight: bold;
-  border: 0px firebrick solid;
-  background-color: gainsboro;
+  border: 0px crimson solid;
+  background-color: crimson;
+  margin-left: 1.5em;
 }
 
 button {
@@ -31,8 +33,53 @@ button {
   padding-right: 2em;
   padding-left: 2em;
   background-color: LightBlue;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 form > div {
   margin-bottom: 1em;
+}
+
+.success,
+.warning,
+.error,
+.info {
+  border-radius: 0.75em;
+  min-height: 2em;
+  margin-right: auto;
+  margin-left: auto;
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.success p,
+.warning p,
+.error p,
+.info p {
+  text-align: center;
+  margin: 0;
+  padding: 0.5em 0.75em;
+  font-size: 1.25em;
+  font-weight: bolder;
+}
+
+.success {
+  background-color: lightgreen;
+}
+
+.error {
+  color: white;
+  background-color: crimson;
+}
+
+.warning {
+  background-color: gold;
+}
+
+.info {
+  background-color: deepskyblue;
 }
