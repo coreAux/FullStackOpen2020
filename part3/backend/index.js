@@ -3,6 +3,20 @@ const app = express();
 
 app.use(express.json());
 
+const requestLogger = (req, res, next) => {
+  console.log("Method:  ", req.method);
+  console.log("Path:  ", req.path);
+  console.log("Body: ", req.body);
+  console.log("---");
+  next();
+};
+
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: "Unknown endpoint" });
+};
+
+app.use(requestLogger);
+
 let notes = [
   {
     id: 1,
@@ -25,10 +39,6 @@ let notes = [
 ];
 
 app.get("/", (req, res) => {
-  res.send("<h1>Hello world! 🌏</h1>");
-});
-
-app.get("/info", (req, res) => {
   res.send("<h1>Hello world! 🌏</h1>");
 });
 

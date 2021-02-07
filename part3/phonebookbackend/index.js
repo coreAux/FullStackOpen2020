@@ -1,7 +1,21 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
 app.use(express.json());
+app.use(morgan("tiny"));
+
+morgan.token("type", function (req, res) {
+  return JSON.stringify(req.body);
+});
+
+app.use(
+  morgan(":type", {
+    skip: function (req, res) {
+      return req.method !== "POST";
+    },
+  })
+);
 
 let persons = [
   {
@@ -66,8 +80,6 @@ const generateId = (max) => {
 
 app.post("/api/persons", (req, res) => {
   const body = req.body;
-
-  console.log(req.body);
 
   if (!body.name && !body.number) {
     return res.status(400).json({
