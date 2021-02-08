@@ -1,16 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040123456",
-      "id": 1
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
       "name": "Dan Abramov",
       "number": "12-35-213233",
       "id": 3
@@ -22,8 +12,23 @@
     },
     {
       "name": "Mickey P",
-      "number": "031-91 91 98",
+      "number": "01010293",
       "id": 5
+    },
+    {
+      "name": "Mickey",
+      "number": "01010293",
+      "id": 6
+    },
+    {
+      "name": "I am SPARTa",
+      "number": "84889492",
+      "id": 7
+    },
+    {
+      "name": "Hello",
+      "number": "1231231",
+      "id": 8
     }
   ]
 }

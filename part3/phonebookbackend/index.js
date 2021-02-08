@@ -1,8 +1,11 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
+
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 app.use(morgan("tiny"));
 
 morgan.token("type", function (req, res) {
@@ -112,7 +115,7 @@ app.post("/api/persons", (req, res) => {
   res.json(person);
 });
 
-app.delete("/api/notes/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
   persons = persons.filter((person) => person.id !== id);
 
