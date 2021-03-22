@@ -30,23 +30,33 @@ const App = () => {
   };
 
   // CRUD functions
-  // Create, invoked by the handelSubmit function
+  // Create, invoked by the handleSubmit function
   const addPerson = () => {
     const person = {
       name: newName,
       number: newPhonenumber,
     };
 
-    personService.create(person).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewPhonenumber("");
-      activateNotification(
-        `Added ${person.name} to the Phonebook.`,
-        "success",
-        10000
-      );
-    });
+    personService
+      .create(person)
+      .then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewPhonenumber("");
+        activateNotification(
+          `Added ${person.name} to the Phonebook.`,
+          "success",
+          10000
+        );
+      })
+      .catch(error => {
+        activateNotification(
+          `${error.response.data.error}`,
+          "error",
+          10000
+        )
+        console.log(error.response.data);
+      })
   };
 
   // Read
@@ -66,14 +76,20 @@ const App = () => {
       .update(id, changedPerson)
       .then((returnedPerson) => {
         setPersons(persons.map((p) => (p.id !== id ? p : returnedPerson)));
+        activateNotification(
+          `Updated ${returnedPerson.name}.`,
+          "success",
+          10000
+        );
       })
       .catch((err) => {
         activateNotification(
-          `Information of ${person.name} has already been removed from the server.`,
+          `${err.response.data.error}`,
           "error",
           10000
         );
-        setPersons(persons.filter((p) => p.id !== id));
+        console.log(err.response.data)
+        // setPersons(persons.filter((p) => p.id !== id));
       });
   };
 
@@ -115,7 +131,7 @@ const App = () => {
     // Filter through array to see if newName already exists in there
     // If it does, the filter-function will return an array that is not empty
     if (persons.filter((e) => e.name === newName).length > 0) {
-      // If the returned array is not empty we warn the user that the name already exists
+    // If the returned array is not empty we warn the user that the name already exists
       if (
         window.confirm(
           `${newName} is already added to the phonebook, replace the old number with a new one?`
@@ -124,8 +140,8 @@ const App = () => {
         updatePerson();
       }
     } else {
-      // If the returned array is empty we can safely add the person to the phonebook
-      addPerson();
+    // If the returned array is empty we can safely add the person to the phonebook
+    addPerson();
     }
   };
 
