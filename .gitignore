@@ -1,5 +1,7 @@
 .DS_Store
 
 /part2/notes
+/part2/dataforcountries/.env
 /part3
 /part4/backend
+/part4/bloglist/.env
