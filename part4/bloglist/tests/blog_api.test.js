@@ -102,6 +102,24 @@ test("a blog without title and url props is not added", async () => {
     expect(response.body).toHaveLength(blogs.length)
 })
 
+test("deletion of a blog succeeds with status code 204 if id is valid", async () => {
+  let blogsToDelete = await Blog.find({})
+  blogsToDelete = blogsToDelete.map(blog => blog.toJSON())
+
+  await api
+    .delete(`/api/blogs/${blogsToDelete[0].id}`)
+    .expect(204)
+
+  const result = await Blog.find({})
+  const blogsAtEnd = result.map(blog => blog.toJSON())
+
+  expect(blogsAtEnd).toHaveLength(blogs.length - 1)
+
+  const contents = blogsAtEnd.map(r => r.title)
+
+  expect(contents).not.toContain(blogsToDelete[0].title)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
