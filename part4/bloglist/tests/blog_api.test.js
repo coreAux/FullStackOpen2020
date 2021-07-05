@@ -120,6 +120,23 @@ test("deletion of a blog succeeds with status code 204 if id is valid", async ()
   expect(contents).not.toContain(blogsToDelete[0].title)
 })
 
+test("changing a blog returns the new blog", async () => {
+  let blogsAtStart = await Blog.find({})
+  blogsAtStart = blogsAtStart.map(blog => blog.toJSON())
+
+  let changedBlog = blogsAtStart[0]
+  changedBlog.likes = 199
+
+  await api
+    .put(`/api/blogs/${blogsAtStart[0].id}`)
+    .send(changedBlog)
+
+  const result = await Blog.find({})
+  const blogsAtEnd = result.map(blog => blog.likes)
+
+  expect(blogsAtEnd[0]).toEqual(199)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
